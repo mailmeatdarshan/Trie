@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: trie_build
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: trie
+    ports:
+      - "6543:5432"
+    volumes:
+      - trie_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  trie_data:
