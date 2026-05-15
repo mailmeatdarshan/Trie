@@ -16,3 +16,4 @@ const RootLayout = async ({children}) => {
 };
 
 export default RootLayout;
+
