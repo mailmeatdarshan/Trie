@@ -4,7 +4,6 @@ import { currentUserRole, getCurrentUser } from "@/modules/auth/actions";
 import { UserRole } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { resolveMetadata } from "next/dist/lib/metadata/resolve-metadata";
 
 
 export async function POST(request) {

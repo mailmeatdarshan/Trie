@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-export async function POST(request, { params }) {
+export async function POST(request) {
   try {
     const user = await currentUser();
 
@@ -33,6 +33,18 @@ export async function POST(request, { params }) {
       );
     }
 
+    // Verify problem exists
+    const problem = await db.problem.findUnique({
+      where: { id: problemId }
+    });
+
+    if (!problem) {
+        return NextResponse.json({
+            success: false,
+            error: "Problem not found"
+        }, { status: 404 });
+    }
+
     // Verify playlist belongs to user
     const playlist = await db.playlist.findFirst({
       where: {
@@ -48,18 +60,44 @@ export async function POST(request, { params }) {
       );
     }
 
-    // Add problem to playlist
-    const problemInPlaylist = await db.problemInPlaylist.create({
-      data: {
-        problemId,
-        playlistId,
-      },
+    // Check if problem is already in playlist
+    const existingEntry = await db.problemInPlaylist.findFirst({
+        where: {
+            playlistId,
+            problemId
+        }
     });
 
-    return NextResponse.json({
-      success: true,
-      data: problemInPlaylist,
-    });
+    if (existingEntry) {
+        return NextResponse.json({
+            success: false,
+            error: "Problem is already in this playlist"
+        }, { status: 400 });
+    }
+
+    // Add problem to playlist
+    try {
+        const problemInPlaylist = await db.problemInPlaylist.create({
+          data: {
+            problemId,
+            playlistId,
+          },
+        });
+
+        return NextResponse.json({
+          success: true,
+          data: problemInPlaylist,
+        });
+    } catch (createError) {
+        // Handle race condition where record might have been created between check and create
+        if (createError.code === 'P2002') {
+            return NextResponse.json({
+                success: false,
+                error: "Problem is already in this playlist"
+            }, { status: 400 });
+        }
+        throw createError; // Re-throw to be caught by the outer catch
+    }
   } catch (error) {
     console.error("Error adding problem to playlist:", error);
     return NextResponse.json(
