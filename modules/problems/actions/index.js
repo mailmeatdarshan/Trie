@@ -181,7 +181,7 @@ export const executeCode = async (source_code , language_id , stdin , expected_o
     }
 
     const testCaseResults = detailedResults.map((result)=>({
-        submissionId: submission.id,
+      submissionId: submission.id,
       testCase: result.testCase,
       passed: result.passed,
       stdout: result.stdout,
@@ -206,18 +206,39 @@ export const executeCode = async (source_code , language_id , stdin , expected_o
 
 }
 
-export const getAllSubmissionByCurrentUserForProblem = async (problemId)=>{
-  const user = await currentUser();
+export const getAllSubmissionByCurrentUserForProblem = async (problemId) => {
+  try {
+    const user = await currentUser();
 
-  const dbUser = await db.user.findUnique({
-    where:{clerkId:user.id}
-  })
-
-  const submissions = await db.submission.findMany({
-    where:{
-      problemId:problemId,
-      userId:dbUser.id
+    if (!user) {
+      return { success: false, error: "Unauthorized" };
     }
-  })
-   return { success: true, data: submissions };
-}
+
+    const dbUser = await db.user.findUnique({
+      where: { clerkId: user.id },
+    });
+
+    if (!dbUser) {
+      return { success: false, error: "User not found in database" };
+    }
+
+    if (!db.submission) {
+      console.error("❌ db.submission is undefined. Please restart your development server.");
+      return { success: false, error: "Database configuration error" };
+    }
+
+    const submissions = await db.submission.findMany({
+      where: {
+        problemId: problemId,
+        userId: dbUser.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return { success: true, data: submissions };
+  } catch (error) {
+    console.error("❌ Error fetching submissions:", error);
+    return { success: false, error: "Failed to fetch submissions" };
+  }
+};
