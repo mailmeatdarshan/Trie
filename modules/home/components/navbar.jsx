@@ -1,12 +1,19 @@
+"use client"
 import { Button } from '@/components/ui/button'
 import { ModeToggle } from '@/components/ui/mode-toggle'
 import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
 import { UserRole } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Navbar = ({ userRole }) => {
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
     return (
         <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-5xl px-4">
             <div className="bg-white/10 dark:bg-black/10 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl shadow-lg shadow-black/5 dark:shadow-black/20 transition-all duration-200 hover:bg-white/15 dark:hover:bg-black/15">
@@ -41,38 +48,42 @@ const Navbar = ({ userRole }) => {
 
                     <div className="flex items-center gap-4">
                         <ModeToggle />
-                        <Show when="signed-in">
-                            {userRole && userRole === UserRole.ADMIN && (
-                                <Link href={"/create-problem"}>
-                                    <Button variant={"outline"} size={"default"}>
-                                        Create Problem
-                                    </Button>
-                                </Link>
-                            )}
-                            <UserButton />
-                        </Show>
+                        {mounted && (
+                            <>
+                                <Show when="signed-in">
+                                    {userRole && userRole === UserRole.ADMIN && (
+                                        <Link href={"/create-problem"}>
+                                            <Button variant={"outline"} size={"default"}>
+                                                Create Problem
+                                            </Button>
+                                        </Link>
+                                    )}
+                                    <UserButton />
+                                </Show>
 
-                        <Show when="signed-out">
-                            <div className="flex items-center gap-2">
-                                <SignInButton>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="text-sm font-medium hover:bg-white/20 dark:hover:bg-white/10"
-                                    >
-                                        Sign In
-                                    </Button>
-                                </SignInButton>
-                                <SignUpButton>
-                                    <Button
-                                        size="sm"
-                                        className="text-sm font-medium bg-amber-400 hover:bg-amber-500 text-white"
-                                    >
-                                        Sign Up
-                                    </Button>
-                                </SignUpButton>
-                            </div>
-                        </Show>
+                                <Show when="signed-out">
+                                    <div className="flex items-center gap-2">
+                                        <SignInButton>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="text-sm font-medium hover:bg-white/20 dark:hover:bg-white/10"
+                                            >
+                                                Sign In
+                                            </Button>
+                                        </SignInButton>
+                                        <SignUpButton>
+                                            <Button
+                                                size="sm"
+                                                className="text-sm font-medium bg-amber-400 hover:bg-amber-500 text-white"
+                                            >
+                                                Sign Up
+                                            </Button>
+                                        </SignUpButton>
+                                    </div>
+                                </Show>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

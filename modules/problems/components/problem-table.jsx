@@ -11,12 +11,12 @@ import {
   Search,
   Filter,
 } from "lucide-react";
-// import AddToPlaylistModal from "./add-to-playlist";
-// import CreatePlaylistModal from "./create-playlist";
+import AddToPlaylistModal from "./add-to-playlist";
+import CreatePlaylistModal from "./create-playlist";
 import {
-  // createPlaylist,
+  createPlaylist,
   deleteProblem,
-  // addProblemToPlaylist,
+  addProblemToPlaylist,
 } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -177,10 +177,10 @@ const ProblemsTable = ({ problems, user }) => {
             Manage and solve coding problems
           </p>
         </div>
-        {/* <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
+        <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
           <Plus className="h-4 w-4" />
           Create Playlist
-        </Button> */}
+        </Button>
       </div>
 
       {/* Filters */}
@@ -310,7 +310,7 @@ const ProblemsTable = ({ problems, user }) => {
                               </Button>
                             </>
                           )}
-                          {/* <Button
+                          <Button
                             variant="outline"
                             size="sm"
                             onClick={() => {
@@ -321,7 +321,7 @@ const ProblemsTable = ({ problems, user }) => {
                           >
                             <Bookmark className="h-4 w-4" />
                             <span className="hidden sm:inline">Save</span>
-                          </Button> */}
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -380,7 +380,7 @@ const ProblemsTable = ({ problems, user }) => {
       )}
 
       {/* Modals */}
-      {/* <CreatePlaylistModal
+      <CreatePlaylistModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onSubmit={handleCreatePlaylist}
@@ -391,7 +391,7 @@ const ProblemsTable = ({ problems, user }) => {
         onClose={() => setIsAddToPlaylistModalOpen(false)}
         onSubmit={handleAddToPlaylist}
         problemId={selectedProblemId}
-      /> */}
+      />
     </div>
   );
 };
