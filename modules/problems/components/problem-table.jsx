@@ -133,11 +133,17 @@ const ProblemsTable = ({ problems, user }) => {
         setIsAddToPlaylistModalOpen(false);
         toast.success("Problem added to playlist");
       } else {
-        throw new Error(result.error);
+        // Handle specific validation errors gracefully
+        if (result.error === "Problem is already in this playlist") {
+            toast.warning(result.error);
+            setIsAddToPlaylistModalOpen(false);
+            return;
+        }
+        toast.error(result.error || "Failed to add problem to playlist");
       }
     } catch (error) {
       console.error("Error adding to playlist:", error);
-      toast.error(error.message || "Failed to add problem to playlist");
+      toast.error("An unexpected error occurred");
     }
   };
 

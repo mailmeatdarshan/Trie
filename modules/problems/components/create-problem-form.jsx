@@ -269,7 +269,21 @@ for (let i = 3; i <= n; i++) {
 }
 
 return dp[n];
-}`,
+}
+
+const readline = require('readline');
+const rl = readline.createInterface({
+input: process.stdin,
+output: process.stdout,
+terminal: false
+});
+
+rl.on('line', (line) => {
+const n = parseInt(line.trim());
+const result = climbStairs(n);
+console.log(result);
+rl.close();
+});`,
     PYTHON: `class Solution:
   def climbStairs(self, n: int) -> int:
       # Base cases
@@ -284,26 +298,38 @@ return dp[n];
       for i in range(3, n + 1):
           dp[i] = dp[i - 1] + dp[i - 2]
       
-      return dp[n]`,
+      return dp[n]
+
+if __name__ == "__main__":
+  import sys
+  n = int(sys.stdin.readline().strip())
+  sol = Solution()
+  result = sol.climbStairs(n)
+  print(result)`,
     JAVA: `import java.util.Scanner;
 
-class Main {
+public class Main {
   public int climbStairs(int n) {
-      // Base cases
       if (n <= 2) {
           return n;
       }
-      
-      // Dynamic programming approach
       int[] dp = new int[n + 1];
       dp[1] = 1;
       dp[2] = 2;
-      
       for (int i = 3; i <= n; i++) {
           dp[i] = dp[i - 1] + dp[i - 2];
       }
-      
       return dp[n];
+  }
+
+  public static void main(String[] args) {
+      Scanner scanner = new Scanner(System.in);
+      if (scanner.hasNextLine()) {
+          int n = Integer.parseInt(scanner.nextLine().trim());
+          Main main = new Main();
+          System.out.println(main.climbStairs(n));
+      }
+      scanner.close();
   }
 }`,
     CPP: `#include <iostream>
@@ -605,10 +631,12 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String input = sc.nextLine();
-
-        boolean result = isPalindrome(input);
-        System.out.println(result ? "true" : "false");
+        if (sc.hasNextLine()) {
+            String input = sc.nextLine();
+            boolean result = isPalindrome(input);
+            System.out.println(result ? "true" : "false");
+        }
+        sc.close();
     }
 }
 `,
@@ -795,11 +823,18 @@ const CreateProblemForm = () => {
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify(values)
         })
-        toast.success(response.message || "Problem created successfully")
-        router.push("/problems")
+
+        const result = await response.json();
+
+        if (response.ok) {
+            toast.success(result.message || "Problem created successfully")
+            router.push("/problems")
+        } else {
+            toast.error(result.error || "Failed to create problem")
+        }
     } catch (error) {
           console.error("Error creating problem:", error);
-      toast.error(error.message || "Failed to create problem");
+      toast.error(error.message || "An unexpected error occurred");
     }
     finally{
          setIsloading(false);
