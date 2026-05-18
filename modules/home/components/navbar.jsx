@@ -33,6 +33,12 @@ const Navbar = ({ userRole }) => {
                             Problems
                         </Link>
                         <Link
+                            href="/playlists"
+                            className="text-sm font-medium text-zinc-600 dark:text-zinc-400  hover:text-amber-600 cursor-pointer dark:hover:text-amber-400"
+                        >
+                            Playlists
+                        </Link>
+                        <Link
                             href="/about"
                             className="text-sm font-medium text-zinc-600 dark:text-zinc-400  hover:text-amber-600 cursor-pointer dark:hover:text-amber-400"
                         >
