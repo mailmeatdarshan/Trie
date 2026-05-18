@@ -40,6 +40,9 @@
     "vaul": "^1.1.2",
     "zod": "^4.4.3"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
