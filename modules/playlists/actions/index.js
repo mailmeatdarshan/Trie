@@ -79,3 +79,21 @@ export const getPlaylistById = async (id) => {
   }
 };
 
+export const removeProblemFromPlaylist = async (playlistId, problemId) => {
+  try {
+    await db.problemInPlaylist.delete({
+      where: {
+        playlistId_problemId: {
+          playlistId: playlistId,
+          problemId: problemId,
+        },
+      },
+    });
+
+    return { success: true, message: "Problem removed from playlist" };
+  } catch (error) {
+    console.error("❌ Error removing problem from playlist:", error);
+    return { success: false, error: "Failed to remove problem from playlist" };
+  }
+};
+

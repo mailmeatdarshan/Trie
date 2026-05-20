@@ -1,0 +1,10 @@
+const fs = require('fs');
+const content = fs.readFileSync('prisma/seed.js', 'utf8');
+const startMatch = content.indexOf('const problems = [');
+const endMatch = content.indexOf('  // Insert problems into database');
+const prefix = content.slice(0, startMatch);
+const suffix = content.slice(endMatch);
+const problemsStr = content.slice(startMatch, endMatch);
+let problems;
+eval(problemsStr);
+console.log(problems.length);
