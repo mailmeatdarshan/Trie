@@ -12,8 +12,10 @@ Trie is a high-performance, full-stack competitive programming platform designed
 
 <video src="public/project-demo.mp4" controls="controls" style="max-width: 100%;"></video>
 
-> [!NOTE]
-> If the video doesn't play directly in your browser, you can view it [here](./public/project-demo.mp4).
+> [!TIP]
+> **Can't see the video?**
+> - [Watch on Google Drive](https://drive.google.com/file/d/1ZFap4sR0R7mgQbZR4NNZn3htM459sHvZ/view?usp=sharing) (Recommended)
+> - [View local file](./public/project-demo.mp4)
 
 ## 🎯 Platform Overview
 
