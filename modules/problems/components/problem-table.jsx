@@ -38,6 +38,17 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
 const ProblemsTable = ({ problems, user }) => {
@@ -76,7 +87,7 @@ const ProblemsTable = ({ problems, user }) => {
   }, [problems, search, difficulty, selectedTag]);
 
   // Pagination logic
-  const itemsPerPage = 5;
+  const itemsPerPage = 15;
   const totalPages = Math.ceil(filteredProblems.length / itemsPerPage);
   const paginatedProblems = useMemo(() => {
     return filteredProblems.slice(
@@ -304,13 +315,33 @@ const ProblemsTable = ({ problems, user }) => {
                         <div className="flex items-center gap-2">
                           {user?.role === "ADMIN" && (
                             <>
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={() => handleDelete(problem.id)}
-                              >
-                                <TrashIcon className="h-4 w-4" />
-                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="destructive"
+                                    size="sm"
+                                  >
+                                    <TrashIcon className="h-4 w-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete Problem?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This will permanently delete "{problem.title}". This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction 
+                                      onClick={() => handleDelete(problem.id)}
+                                      className="bg-red-600 hover:bg-red-700 text-white"
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
                               <Button variant="outline" size="sm" disabled>
                                 <PencilIcon className="h-4 w-4" />
                               </Button>

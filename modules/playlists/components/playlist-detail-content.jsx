@@ -1,13 +1,33 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
-import { LayoutGrid, Calendar, User, ArrowLeft, ExternalLink } from 'lucide-react';
+import { LayoutGrid, Calendar, User, ArrowLeft, ExternalLink, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { removeProblemFromPlaylist } from '../actions';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
-const PlaylistDetailContent = ({ playlist }) => {
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+const PlaylistDetailContent = ({ playlist, currentDbUserId }) => {
+  const router = useRouter();
+  const isOwner = playlist.userId === currentDbUserId;
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -22,6 +42,16 @@ const PlaylistDetailContent = ({ playlist }) => {
       case "MEDIUM": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
       case "HARD": return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
       default: return "";
+    }
+  };
+
+  const handleRemoveProblem = async (problemId) => {
+    const res = await removeProblemFromPlaylist(playlist.id, problemId);
+    if (res.success) {
+      toast.success(res.message);
+      router.refresh();
+    } else {
+      toast.error(res.error);
     }
   };
 
@@ -89,7 +119,7 @@ const PlaylistDetailContent = ({ playlist }) => {
                   <TableRow className="hover:bg-transparent">
                     <TableHead className="px-6">Title</TableHead>
                     <TableHead>Difficulty</TableHead>
-                    <TableHead className="text-right px-6">Action</TableHead>
+                    <TableHead className="text-right px-6">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -107,11 +137,43 @@ const PlaylistDetailContent = ({ playlist }) => {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right px-6">
-                          <Link href={`/problem/${problem.id}`}>
-                            <Button variant="ghost" size="sm" className="hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-amber-900/20 dark:hover:text-amber-400 gap-2">
-                              Solve <ExternalLink className="w-3.5 h-3.5" />
-                            </Button>
-                          </Link>
+                          <div className="flex items-center justify-end gap-2">
+                            <Link href={`/problem/${problem.id}`}>
+                              <Button variant="ghost" size="sm" className="hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-amber-900/20 dark:hover:text-amber-400 gap-2">
+                                Solve <ExternalLink className="w-3.5 h-3.5" />
+                              </Button>
+                            </Link>
+                            {isOwner && (
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Remove Problem?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This will remove "{problem.title}" from your playlist. This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction 
+                                      onClick={() => handleRemoveProblem(problem.id)}
+                                      className="bg-red-600 hover:bg-red-700 text-white"
+                                    >
+                                      Remove
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            )}
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))

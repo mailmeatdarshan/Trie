@@ -38,7 +38,7 @@ export const SubmissionDetails = ({ submission }) => {
           Submitted at {new Date(submission.createdAt).toLocaleString()}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center gap-2">
             <Code className="h-4 w-4 text-muted-foreground" />
@@ -62,6 +62,17 @@ export const SubmissionDetails = ({ submission }) => {
             </div>
           </div>
         </div>
+
+        {submission.sourceCode && (
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Submitted Code</p>
+            <div className="rounded-md border bg-muted p-4">
+              <pre className="text-xs font-mono whitespace-pre-wrap max-h-[300px] overflow-y-auto">
+                {submission.sourceCode}
+              </pre>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
