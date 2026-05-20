@@ -8,6 +8,13 @@ Trie is a high-performance, full-stack competitive programming platform designed
 ![Clerk](https://img.shields.io/badge/Auth-Clerk-purple)
 ![Docker](https://img.shields.io/badge/Runtime-Judge0-blue)
 
+## 📺 Video Demo
+
+<video src="public/project-demo.mkv" controls="controls" style="max-width: 100%;"></video>
+
+> [!NOTE]
+> If the video doesn't play directly in your browser, you can view it [here](./public/project-demo.mkv).
+
 ## 🎯 Platform Overview
 
 Trie is built for the modern developer. It combines a sleek, intuitive interface with a powerful backend capable of handling high-concurrency code submissions across 5+ major programming languages. Whether you're an admin curating the next big "Striver Sheet" or a student solving your first DP problem, Trie provides the tools you need to succeed.
